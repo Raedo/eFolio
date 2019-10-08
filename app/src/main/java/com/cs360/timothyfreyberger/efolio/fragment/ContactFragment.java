@@ -1,5 +1,7 @@
 package com.cs360.timothyfreyberger.efolio.fragment;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -7,11 +9,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.cs360.timothyfreyberger.efolio.R;
 import com.cs360.timothyfreyberger.efolio.other.DatabaseHelper;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
@@ -27,6 +35,8 @@ public class ContactFragment extends Fragment {
     Button btnDelete;
 
     Context thisContext;
+    final Calendar myCalendar = Calendar.getInstance();
+    DatePickerDialog.OnDateSetListener date;
 
 
     public ContactFragment() {
@@ -60,6 +70,45 @@ public class ContactFragment extends Fragment {
         btnUpdate = (Button)root.findViewById(R.id.btnUpdate);
         btnDelete = (Button)root.findViewById(R.id.btnDelete);
 
+        date = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int monthOfYear, int dayOfMonth) {
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH, monthOfYear);
+                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                updateLabel();
+            }
+        };
+
+        editDate.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                new DatePickerDialog(thisContext, date, myCalendar
+                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
+
+        editTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int hour = myCalendar.get(Calendar.HOUR_OF_DAY);
+                int minute = myCalendar.get(Calendar.MINUTE);
+
+                TimePickerDialog myTimePicker;
+                myTimePicker = new TimePickerDialog(thisContext, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                        editTime.setText( selectedHour + ":" + selectedMinute);
+                    }
+                }, hour, minute, true);
+                myTimePicker.setTitle("Select Time");
+                myTimePicker.show();
+            }
+        });
+
         //methods used to add, edit, delete or view the database.
         DeleteData();
         UpdateDate();
@@ -67,6 +116,13 @@ public class ContactFragment extends Fragment {
         viewAll();
 
         return root;
+    }
+
+    private void updateLabel() {
+        String myFormat = "yyyy/MM/dd"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+
+        editDate.setText(sdf.format(myCalendar.getTime()));
     }
 
     /*
