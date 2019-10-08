@@ -1,10 +1,12 @@
 package com.cs360.timothyfreyberger.efolio.activity;
 
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.cs360.timothyfreyberger.efolio.R;
+import com.cs360.timothyfreyberger.efolio.fragment.MapFragment;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
@@ -21,19 +23,24 @@ import androidx.navigation.ui.NavigationUI;
 public class StartActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
+    private FragmentManager fm;
+    private DrawerLayout drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        final DrawerLayout drawer = findViewById(R.id.drawer_layout);
+
+        drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
+
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow,
+                R.id.nav_home, R.id.nav_gallery, R.id.nav_map,
                 R.id.nav_tools, R.id.nav_share, R.id.nav_send)
                 .setDrawerLayout(drawer)
                 .build();
@@ -44,11 +51,25 @@ public class StartActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 selectDrawerItem(menuItem);
-                setTitle(menuItem.getTitle());
                 drawer.closeDrawers();
                 return true;
             }
         }));
+
+        //sets the opening fragment
+        Class starter =  com.cs360.timothyfreyberger.efolio.fragment.ContactFragment.class;
+
+        fm = getSupportFragmentManager();
+        Fragment f = null;
+        try {
+            f = (Fragment) starter.newInstance();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        }
+
+        fm.beginTransaction().replace(R.id.nav_host_fragment, f).commit();
     }
 
     public void selectDrawerItem(MenuItem menuItem) {
@@ -57,10 +78,13 @@ public class StartActivity extends AppCompatActivity {
 
         switch(menuItem.getItemId()) {
             case R.id.nav_home:
-                fragmentClass = com.cs360.timothyfreyberger.efolio.ui.home.HomeFragment.class;
+                fragmentClass = com.cs360.timothyfreyberger.efolio.fragment.ContactFragment.class;
                 break;
             case R.id.nav_gallery:
                 fragmentClass = com.cs360.timothyfreyberger.efolio.activity.ui.gallery.GalleryFragment.class;
+                break;
+            case R.id.nav_map:
+                fragmentClass = MapFragment.class;
                 break;
             default:
                 fragmentClass = com.cs360.timothyfreyberger.efolio.ui.home.HomeFragment.class;
@@ -78,9 +102,23 @@ public class StartActivity extends AppCompatActivity {
             fragmentManager.popBackStack();
         }
 
+
         fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, fragment).commit();
 
+        getSupportActionBar().setTitle(menuItem.getTitle());
 
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                drawer.openDrawer(Gravity.START);
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -90,10 +128,4 @@ public class StartActivity extends AppCompatActivity {
         return true;
     }
 
-    @Override
-    public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        return NavigationUI.navigateUp(navController, mAppBarConfiguration)
-                || super.onSupportNavigateUp();
-    }
 }
