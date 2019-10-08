@@ -25,7 +25,7 @@
 
     <fragment
         android:id="@+id/navigation_gallery"
-        android:name="com.cs360.timothyfreyberger.efolio.activity.ui.gallery.GalleryFragment"
+        android:name="com.cs360.timothyfreyberger.efolio.fragment.GalleryFragment"
         android:label="Gallery"
         tools:layout="@layout/fragment_gallery" />
 </navigation>

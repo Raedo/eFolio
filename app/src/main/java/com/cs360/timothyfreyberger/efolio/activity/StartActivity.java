@@ -6,6 +6,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.cs360.timothyfreyberger.efolio.R;
+import com.cs360.timothyfreyberger.efolio.fragment.CalendarFragment;
+import com.cs360.timothyfreyberger.efolio.fragment.GalleryFragment;
 import com.cs360.timothyfreyberger.efolio.fragment.MapFragment;
 import com.google.android.material.navigation.NavigationView;
 
@@ -41,7 +43,7 @@ public class StartActivity extends AppCompatActivity {
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_home, R.id.nav_gallery, R.id.nav_map,
-                R.id.nav_tools, R.id.nav_share, R.id.nav_send)
+                R.id.nav_calendar, R.id.nav_share, R.id.nav_send)
                 .setDrawerLayout(drawer)
                 .build();
         final NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -81,10 +83,13 @@ public class StartActivity extends AppCompatActivity {
                 fragmentClass = com.cs360.timothyfreyberger.efolio.fragment.ContactFragment.class;
                 break;
             case R.id.nav_gallery:
-                fragmentClass = com.cs360.timothyfreyberger.efolio.activity.ui.gallery.GalleryFragment.class;
+                fragmentClass = GalleryFragment.class;
                 break;
             case R.id.nav_map:
                 fragmentClass = MapFragment.class;
+                break;
+            case R.id.nav_calendar:
+                fragmentClass = CalendarFragment.class;
                 break;
             default:
                 fragmentClass = com.cs360.timothyfreyberger.efolio.ui.home.HomeFragment.class;

@@ -65,6 +65,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return res;
     }
 
+    public Cursor getSortedByDate() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor res = db.rawQuery("select * from " + TABLE_NAME + " order by " + COL_6 + " ASC", null);
+        return res;
+    }
+
     public boolean updateData (String id, String name, String address, String phone, String email, String date, String time) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();

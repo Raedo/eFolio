@@ -17,9 +17,9 @@
             android:icon="@drawable/baseline_map_24"
             android:title="Map" />
         <item
-            android:id="@+id/nav_tools"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="@string/menu_tools" />
+            android:id="@+id/nav_calendar"
+            android:icon="@drawable/baseline_calendar_today_24"
+            android:title="Calendar" />
     </group>
 
     <item android:title="Communicate">

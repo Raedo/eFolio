@@ -70,6 +70,7 @@ public class ContactFragment extends Fragment {
         btnUpdate = (Button)root.findViewById(R.id.btnUpdate);
         btnDelete = (Button)root.findViewById(R.id.btnDelete);
 
+        //implement date picker
         date = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int monthOfYear, int dayOfMonth) {
@@ -80,6 +81,7 @@ public class ContactFragment extends Fragment {
             }
         };
 
+        //listener for the date picker
         editDate.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -91,6 +93,7 @@ public class ContactFragment extends Fragment {
             }
         });
 
+        //listener and implementation for the time picker
         editTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

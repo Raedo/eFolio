@@ -1,4 +1,4 @@
-package com.cs360.timothyfreyberger.efolio.activity.ui.gallery;
+package com.cs360.timothyfreyberger.efolio.fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
