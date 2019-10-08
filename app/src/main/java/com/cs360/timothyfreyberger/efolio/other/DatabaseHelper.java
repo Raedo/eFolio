@@ -1,4 +1,4 @@
-package com.cs360.timothyfreyberger.efolio;
+package com.cs360.timothyfreyberger.efolio.other;
 
 import android.content.ContentValues;
 import android.content.Context;

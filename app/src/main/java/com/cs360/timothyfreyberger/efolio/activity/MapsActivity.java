@@ -1,15 +1,16 @@
-package com.cs360.timothyfreyberger.efolio;
-
-import androidx.fragment.app.FragmentActivity;
+package com.cs360.timothyfreyberger.efolio.activity;
 
 import android.os.Bundle;
 
+import com.cs360.timothyfreyberger.efolio.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import androidx.fragment.app.FragmentActivity;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 

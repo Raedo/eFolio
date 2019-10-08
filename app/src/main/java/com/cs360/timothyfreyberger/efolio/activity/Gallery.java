@@ -1,17 +1,19 @@
-package com.cs360.timothyfreyberger.efolio;
+package com.cs360.timothyfreyberger.efolio.activity;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+
+import com.cs360.timothyfreyberger.efolio.R;
+import com.cs360.timothyfreyberger.efolio.other.CreateList;
+import com.cs360.timothyfreyberger.efolio.other.MyAdapter;
+
+import java.util.ArrayList;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Environment;
-import android.view.View;
-import android.widget.Button;
-
-import java.io.File;
-import java.util.ArrayList;
 
 public class Gallery extends AppCompatActivity {
 

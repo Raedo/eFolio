@@ -1,4 +1,4 @@
-package com.cs360.timothyfreyberger.efolio;
+package com.cs360.timothyfreyberger.efolio.other;
 
 public class CreateList {
 

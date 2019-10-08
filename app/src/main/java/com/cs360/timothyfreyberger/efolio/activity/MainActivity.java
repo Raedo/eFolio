@@ -1,27 +1,21 @@
-package com.cs360.timothyfreyberger.efolio.ui.home;
+package com.cs360.timothyfreyberger.efolio.activity;
 
-import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.cs360.timothyfreyberger.efolio.R;
-import com.cs360.timothyfreyberger.efolio.activity.ui.home.HomeViewModel;
 import com.cs360.timothyfreyberger.efolio.other.DatabaseHelper;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.appcompat.app.AppCompatActivity;
 
-public class HomeFragment extends Fragment {
-
-    private com.cs360.timothyfreyberger.efolio.activity.ui.home.HomeViewModel homeViewModel;
+public class MainActivity extends AppCompatActivity {
     DatabaseHelper myDb;
     EditText editId, editName, editAddress, editPhone, editEmail, editDate, editTime;
     Button btnAddData;
@@ -31,31 +25,26 @@ public class HomeFragment extends Fragment {
     Button btnGallery;
     Button btnGetMap;
 
-    Context thisContext;
-
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        thisContext = container.getContext();
+        setContentView(R.layout.activity_main);
+        myDb = new DatabaseHelper(this);
 
-        homeViewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_home, container, false);
-        myDb = new DatabaseHelper(thisContext);
+        editId = (EditText)findViewById(R.id.editId);
+        editName = (EditText)findViewById(R.id.editName);
+        editAddress = (EditText)findViewById(R.id.editAddress);
+        editPhone = (EditText)findViewById(R.id.editPhone);
+        editEmail = (EditText)findViewById(R.id.editEmail);
+        editDate = (EditText)findViewById(R.id.editDate);
+        editTime = (EditText)findViewById(R.id.editTime);
+        btnAddData = (Button)findViewById(R.id.buttonAdd);
+        btnViewAll = (Button)findViewById(R.id.btnViewAll);
+        btnUpdate = (Button)findViewById(R.id.btnUpdate);
+        btnDelete = (Button)findViewById(R.id.btnDelete);
 
-        editId = (EditText)root.findViewById(R.id.editId);
-        editName = (EditText)root.findViewById(R.id.editName);
-        editAddress = (EditText)root.findViewById(R.id.editAddress);
-        editPhone = (EditText)root.findViewById(R.id.editPhone);
-        editEmail = (EditText)root.findViewById(R.id.editEmail);
-        editDate = (EditText)root.findViewById(R.id.editDate);
-        editTime = (EditText)root.findViewById(R.id.editTime);
-        btnAddData = (Button)root.findViewById(R.id.buttonAdd);
-        btnViewAll = (Button)root.findViewById(R.id.btnViewAll);
-        btnUpdate = (Button)root.findViewById(R.id.btnUpdate);
-        btnDelete = (Button)root.findViewById(R.id.btnDelete);
-
-//      btnGallery = (Button)root.findViewById(R.id.btnGallery);
-//      btnGetMap = (Button)root.findViewById(R.id.btnGetMap);
+        btnGallery = (Button)findViewById(R.id.btnGallery);
+        btnGetMap = (Button)findViewById(R.id.btnGetMap);
 
         //methods used to add, edit, delete or view the database.
         DeleteData();
@@ -64,29 +53,67 @@ public class HomeFragment extends Fragment {
         viewAll();
 
         //methods that open other activities in the app
-//        openGallery();
-//        openMap();
+        openGallery();
+        openMap();
 
-        return root;
+    }
+
+    /*
+     * This method opens the portfolio gallery
+     */
+    public void openGallery() {
+        btnGallery.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        startActivity(new Intent(MainActivity.this, Gallery.class));
+                    }
+                }
+        );
+    }
+
+    /*
+     * This method opens the map application to an address
+     * TODO: integrate with a search method so that it can find any address in the database
+     */
+    public void openMap() {
+        btnGetMap.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // URI used to create the Intent.
+                        Uri gmmIntentUri = Uri.parse("geo:0,0?q=3900 Great Plains Dr S, Fargo, ND 58104");
+
+                        // Create an Intent from gmmIntentUri. Set the action to ACTION_VIEW
+                        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                        // Make the Intent explicit by setting the Google Maps package
+                        mapIntent.setPackage("com.google.android.apps.maps");
+
+                        // Attempt to start an activity that can handle the Intent
+                        startActivity(mapIntent);
+
+                    }
+                }
+        );
     }
 
     /*
      * This method will delete data based on a given ID number
      */
     public void DeleteData() {
-        btnDelete.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Integer deletedRows = myDb.deleteData(editId.getText().toString());
+         btnDelete.setOnClickListener(
+                 new View.OnClickListener() {
+                     @Override
+                     public void onClick(View view) {
+                         Integer deletedRows = myDb.deleteData(editId.getText().toString());
 
-                        if (deletedRows > 0)
-                            Toast.makeText(thisContext,"Contact Deleted", Toast.LENGTH_LONG).show();
-                        else
-                            Toast.makeText(thisContext,"Error Deleting Contact", Toast.LENGTH_LONG).show();
-                    }
-                }
-        );
+                         if (deletedRows > 0)
+                             Toast.makeText(MainActivity.this,"Contact Deleted", Toast.LENGTH_LONG).show();
+                         else
+                             Toast.makeText(MainActivity.this,"Error Deleting Contact", Toast.LENGTH_LONG).show();
+                     }
+                 }
+         );
     }
 
     /*
@@ -106,9 +133,9 @@ public class HomeFragment extends Fragment {
                                 editTime.getText().toString());
 
                         if (isUpdated)
-                            Toast.makeText(thisContext,"Contact Updated Successfully", Toast.LENGTH_LONG).show();
+                            Toast.makeText(MainActivity.this,"Contact Updated Successfully", Toast.LENGTH_LONG).show();
                         else
-                            Toast.makeText(thisContext,"Error Updating Contact", Toast.LENGTH_LONG).show();
+                            Toast.makeText(MainActivity.this,"Error Updating Contact", Toast.LENGTH_LONG).show();
                     }
                 }
         );
@@ -131,9 +158,9 @@ public class HomeFragment extends Fragment {
                                 editTime.getText().toString());
 
                         if (isInserted)
-                            Toast.makeText(thisContext,"Contact Added Successfully", Toast.LENGTH_LONG).show();
+                            Toast.makeText(MainActivity.this,"Contact Added Successfully", Toast.LENGTH_LONG).show();
                         else
-                            Toast.makeText(thisContext,"Error Adding Contact", Toast.LENGTH_LONG).show();
+                            Toast.makeText(MainActivity.this,"Error Adding Contact", Toast.LENGTH_LONG).show();
                     }
                 }
         );
@@ -173,7 +200,7 @@ public class HomeFragment extends Fragment {
     }
 
     public void showMessage(String title, String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(thisContext);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         builder.setCancelable(true);
         builder.setTitle(title);

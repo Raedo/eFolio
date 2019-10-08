@@ -1,4 +1,4 @@
-package com.cs360.timothyfreyberger.efolio;
+package com.cs360.timothyfreyberger.efolio.other;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -6,7 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.cs360.timothyfreyberger.efolio.R;
+
 import java.util.ArrayList;
+
 import androidx.recyclerview.widget.RecyclerView;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
