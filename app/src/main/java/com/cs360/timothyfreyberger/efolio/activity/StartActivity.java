@@ -1,14 +1,26 @@
 package com.cs360.timothyfreyberger.efolio.activity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cs360.timothyfreyberger.efolio.R;
 import com.cs360.timothyfreyberger.efolio.fragment.CalendarFragment;
 import com.cs360.timothyfreyberger.efolio.fragment.GalleryFragment;
 import com.cs360.timothyfreyberger.efolio.fragment.MapFragment;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.Scope;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
@@ -27,17 +39,81 @@ public class StartActivity extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration;
     private FragmentManager fm;
     private DrawerLayout drawer;
+    private static GoogleSignInAccount account;
+
+    protected void onStart() {
+        super.onStart();
+
+    }
+
+    public void updateUI(GoogleSignInAccount account) {
+        GoogleSignInClient mGoogleSignInClient;
+
+        if (account == null) {
+            GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestEmail()
+                    .requestScopes(new Scope( "https://www.googleapis.com/auth/calendar.events"))
+                    .build();
+
+            mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+            Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+
+            startActivityForResult(signInIntent, 101);
+        } else {
+            this.account = account;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK)
+            switch (requestCode) {
+                case 101:
+                    try {
+                        // The Task returned from this call is always completed, no need to attach
+                        // a listener.
+                        Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+                        GoogleSignInAccount account = task.getResult(ApiException.class);
+                        onLoggedIn(account);
+                    } catch (ApiException e) {
+                        // The ApiException status code indicates the detailed failure reason.
+                        e.printStackTrace();
+                        Toast.makeText(this, "fail", Toast.LENGTH_LONG).show();
+                    }
+                    break;
+            }
+    }
+
+    public void onLoggedIn(GoogleSignInAccount googleSignInAccount) {
+        this.account = googleSignInAccount;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
+
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        updateUI(account);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
         drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
+
+        View headerView = navigationView.getHeaderView(0);
+        TextView textName = (TextView) headerView.findViewById(R.id.userName);
+        TextView textEmail = (TextView) headerView.findViewById(R.id.userEmail);
+
+        if (this.account != null) {
+            textName.setText(this.account.getDisplayName());
+            textEmail.setText(this.account.getEmail());
+        }
 
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -120,6 +196,15 @@ public class StartActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 drawer.openDrawer(Gravity.START);
+                return true;
+            case R.id.action_logout:
+                GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                        .requestEmail()
+                        .requestScopes(new Scope( "https://www.googleapis.com/auth/calendar.events"))
+                        .build();
+                GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+                mGoogleSignInClient.signOut();
+                finish();
                 return true;
         }
 

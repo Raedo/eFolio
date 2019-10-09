@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cs360.timothyfreyberger.efolio.R;
 
@@ -16,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder> {
 
     private ArrayList<Contact> contacts;
-    private ItemClickListener clickListener;
     private Context context;
 
     public ContactAdapter(ArrayList<Contact> contacts, Context context) {
@@ -33,8 +33,10 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ContactAdapter.ViewHolder holder, int position) {
-        Contact contact = contacts.get(position);
+    public void onBindViewHolder(@NonNull ContactAdapter.ViewHolder holder, final int position) {
+
+
+        final Contact contact = contacts.get(position);
 
         holder.date.setText(contact.getDate());
         holder.time.setText(contact.getTime());
@@ -42,6 +44,22 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         holder.address.setText(contact.getAddress());
         holder.phone.setText(contact.getPhone());
         holder.email.setText(contact.getEmail());
+        holder.view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean added = false;
+                try {
+                    added = AddEvent.addEvent(contact);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if (added) {
+                    Toast.makeText(context, "Event Created for " + contact.getName(), Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(context, "Event Failed", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
     }
 
     @Override
@@ -72,5 +90,6 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
             date = view.findViewById(R.id.date);
             time = view.findViewById(R.id.time);
         }
+
     }
 }
