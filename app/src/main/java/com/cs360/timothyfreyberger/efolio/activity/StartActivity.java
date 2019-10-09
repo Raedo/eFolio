@@ -1,8 +1,11 @@
 package com.cs360.timothyfreyberger.efolio.activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,6 +17,7 @@ import com.cs360.timothyfreyberger.efolio.R;
 import com.cs360.timothyfreyberger.efolio.fragment.CalendarFragment;
 import com.cs360.timothyfreyberger.efolio.fragment.GalleryFragment;
 import com.cs360.timothyfreyberger.efolio.fragment.MapFragment;
+import com.facebook.FacebookSdk;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -26,6 +30,7 @@ import com.google.android.material.navigation.NavigationView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -40,6 +45,8 @@ public class StartActivity extends AppCompatActivity {
     private FragmentManager fm;
     private DrawerLayout drawer;
     private static GoogleSignInAccount account;
+    private int requestCode;
+    private int grantResults[];
 
 
     protected void onStart() {
@@ -99,6 +106,10 @@ public class StartActivity extends AppCompatActivity {
 
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         updateUI(account);
+        FacebookSdk.sdkInitialize(getApplicationContext());
+
+        ActivityCompat.requestPermissions(this,  new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},requestCode);
+        onRequestPermissionsResult(requestCode,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},grantResults);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -151,7 +162,33 @@ public class StartActivity extends AppCompatActivity {
         fm.beginTransaction().replace(R.id.nav_host_fragment, f).commit();
     }
 
-    public void selectDrawerItem(MenuItem menuItem) {
+    @Override // android recommended class to handle permissions
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    Log.d("permission", "granted");
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.uujm
+                    Toast.makeText(this, "Permission denied to read your External storage", Toast.LENGTH_SHORT).show();
+
+                    //app cannot function without this permission for now so close it...
+                    onDestroy();
+                }
+                return;
+            }
+        }
+    }
+
+
+            public void selectDrawerItem(MenuItem menuItem) {
         Fragment fragment = null;
         Class fragmentClass;
 
