@@ -1,6 +1,7 @@
 package com.cs360.timothyfreyberger.efolio.other;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,13 +48,14 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                boolean added = false;
+                Intent added = null;
                 try {
                     added = AddEvent.addEvent(contact);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                if (added) {
+                if (added != null) {
+                    context.startActivity(added);
                     Toast.makeText(context, "Event Created for " + contact.getName(), Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(context, "Event Failed", Toast.LENGTH_LONG).show();

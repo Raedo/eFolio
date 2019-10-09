@@ -41,6 +41,7 @@ public class StartActivity extends AppCompatActivity {
     private DrawerLayout drawer;
     private static GoogleSignInAccount account;
 
+
     protected void onStart() {
         super.onStart();
 
