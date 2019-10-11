@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cs360.timothyfreyberger.efolio.R;
+import com.cs360.timothyfreyberger.efolio.fragment.AboutMeFragment;
 import com.cs360.timothyfreyberger.efolio.fragment.CalendarFragment;
 import com.cs360.timothyfreyberger.efolio.fragment.GalleryFragment;
 import com.cs360.timothyfreyberger.efolio.fragment.MapFragment;
@@ -147,7 +148,7 @@ public class StartActivity extends AppCompatActivity {
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_home, R.id.nav_gallery, R.id.nav_map,
-                R.id.nav_calendar, R.id.nav_share, R.id.nav_send)
+                R.id.nav_calendar, R.id.nav_share, R.id.nav_about_me)
                 .setDrawerLayout(drawer)
                 .build();
         final NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -220,6 +221,9 @@ public class StartActivity extends AppCompatActivity {
                 break;
             case R.id.nav_calendar:
                 fragmentClass = CalendarFragment.class;
+                break;
+            case R.id.nav_about_me:
+                fragmentClass = AboutMeFragment.class;
                 break;
             default:
                 fragmentClass = com.cs360.timothyfreyberger.efolio.ui.home.HomeFragment.class;
