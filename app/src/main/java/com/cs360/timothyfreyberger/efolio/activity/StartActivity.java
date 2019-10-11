@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,6 +27,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
@@ -47,6 +47,7 @@ public class StartActivity extends AppCompatActivity {
     private static GoogleSignInAccount account;
     private int requestCode;
     private int grantResults[];
+    ActionBarDrawerToggle toggle;
 
 
     protected void onStart() {
@@ -111,17 +112,32 @@ public class StartActivity extends AppCompatActivity {
         ActivityCompat.requestPermissions(this,  new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},requestCode);
         onRequestPermissionsResult(requestCode,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},grantResults);
 
+        //set up toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
 
+        //set up drawer
         drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
+
+        toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+
+
+        //add icon for drawer navigation button
+        toggle.setDrawerIndicatorEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.baseline_menu_24);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationIcon(R.drawable.baseline_menu_24);
+        toggle.syncState();
 
         View headerView = navigationView.getHeaderView(0);
         TextView textName = (TextView) headerView.findViewById(R.id.userName);
         TextView textEmail = (TextView) headerView.findViewById(R.id.userEmail);
 
+        //sets the display to the Google information if possible
         if (this.account != null) {
             textName.setText(this.account.getDisplayName());
             textEmail.setText(this.account.getEmail());
@@ -232,9 +248,6 @@ public class StartActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
-                drawer.openDrawer(Gravity.START);
-                return true;
             case R.id.action_logout:
                 GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                         .requestEmail()
@@ -254,6 +267,13 @@ public class StartActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.start, menu);
         return true;
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        toggle.syncState();
     }
 
 }
