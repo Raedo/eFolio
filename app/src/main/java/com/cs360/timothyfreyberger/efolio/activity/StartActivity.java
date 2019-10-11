@@ -17,6 +17,7 @@ import com.cs360.timothyfreyberger.efolio.fragment.AboutMeFragment;
 import com.cs360.timothyfreyberger.efolio.fragment.CalendarFragment;
 import com.cs360.timothyfreyberger.efolio.fragment.GalleryFragment;
 import com.cs360.timothyfreyberger.efolio.fragment.MapFragment;
+import com.cs360.timothyfreyberger.efolio.fragment.ShareFragment;
 import com.facebook.FacebookSdk;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -221,6 +222,9 @@ public class StartActivity extends AppCompatActivity {
                 break;
             case R.id.nav_calendar:
                 fragmentClass = CalendarFragment.class;
+                break;
+            case R.id.nav_share:
+                fragmentClass = ShareFragment.class;
                 break;
             case R.id.nav_about_me:
                 fragmentClass = AboutMeFragment.class;
