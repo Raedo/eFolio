@@ -39,13 +39,19 @@ public class ShareFragment extends Fragment {
 
         Button btnShare = (Button) root.findViewById(R.id.shareButton);
 
-        if (ShareDialog.canShow(ShareLinkContent.class)) {
-            ShareLinkContent linkContent = new ShareLinkContent.Builder()
-                    .setContentUrl(Uri.parse("https://tfreyberger.com"))
-                    .build();
-            shareDialog.show(linkContent);
+        btnShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (ShareDialog.canShow(ShareLinkContent.class)) {
+                    ShareLinkContent linkContent = new ShareLinkContent.Builder()
+                            .setContentUrl(Uri.parse("https://tfreyberger.com"))
+                            .build();
+                    shareDialog.show(linkContent);
 
-        }
+                }
+            }
+        });
+
 
         return root;
     }

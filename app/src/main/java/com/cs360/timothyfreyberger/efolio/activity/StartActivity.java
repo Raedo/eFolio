@@ -206,7 +206,7 @@ public class StartActivity extends AppCompatActivity {
     }
 
 
-            public void selectDrawerItem(MenuItem menuItem) {
+    public void selectDrawerItem(MenuItem menuItem) {
         Fragment fragment = null;
         Class fragmentClass;
 
@@ -282,6 +282,12 @@ public class StartActivity extends AppCompatActivity {
         super.onPostCreate(savedInstanceState);
         // Sync the toggle state after onRestoreInstanceState has occurred.
         toggle.syncState();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Toast.makeText(this, "Goodbye!", Toast.LENGTH_SHORT).show();
     }
 
 }
